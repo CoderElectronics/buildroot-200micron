@@ -4,15 +4,23 @@
 #include "suniv-f1c100s.dtsi"
 
 / {
-	model = "Widora MangoPi R1";
+	model = "200micron r1";
 	compatible = "allwinner,suniv-f1c200s",
 			 "allwinner,suniv-f1c100s";
+
+	aliases {
+		serial0 = &uart0;
+		serial1 = &uart2;
+		spi0 = &spi0;
+		i2c0 = &i2c0;
+	};
 
 	chosen {
 		#address-cells = <1>;
 		#size-cells = <1>;
 		ranges;
 
+		stdout-path = "serial0:115200n8";
 		bootargs = "console=ttyS0,115200 rootwait init=/preinit root=/dev/mtdblock2 rootfstype=squashfs overlayfsdev=/dev/mtdblock3";
 
 		simplefb_lcd: framebuffer-lcd0 {
@@ -25,23 +33,6 @@
 			status = "disabled";
 		};
 	};
-
-	// panel: panel {
-	// 	compatible = "qiaodian,qd43003c0-40", "simple-panel";
-	// 	#address-cells = <1>;
-	// 	#size-cells = <0>;
-
-	// 	port@0 {
-	// 		reg = <0>;
-	// 		#address-cells = <1>;
-	// 		#size-cells = <0>;
-
-	// 		panel_input: endpoint@0 {
-	// 			reg = <0>;
-	// 			remote-endpoint = <&tcon0_out_lcd>;
-	// 		};
-	// 	};
-	// };
 };
 
 &spi0 {
@@ -53,6 +44,7 @@
 		compatible = "winbond,w25q128", "jedec,spi-nor";
 		reg = <0>;
 		spi-max-frequency = <50000000>;
+		status = "disabled";
 
 		partitions {
 			compatible = "fixed-partitions";
@@ -90,8 +82,6 @@
 		compatible = "spi-nand";
 		reg = <0>;
 		spi-max-frequency = <50000000>;
-		status = "disabled";
-
 		partitions {
 			compatible = "fixed-partitions";
 			#address-cells = <1>;
@@ -134,6 +124,24 @@
 	status = "okay";
 };
 
+&uart2 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&uart2_pe_pins>;
+	status = "okay";
+};
+
+&pio {
+    esp_reset_pin: esp_reset_pin@0 {
+        pins = "PD11";
+        function = "gpio_out";
+    };
+    
+    esp_boot_pin: esp_boot_pin@0 {
+        pins = "PD12";
+        function = "gpio_out";
+    };
+};
+
 &mmc0 {
 	status = "okay";
 	broken-cd;
@@ -144,12 +152,11 @@
 };
 
 &usb_otg {
-	dr_mode = "otg"; /* otg host peripheral */
+	dr_mode = "host"; /* host or peripheral */
 	status = "okay";
 };
 
 &usbphy {
-	usb0_id_det-gpio = <&pio 4 2 GPIO_ACTIVE_HIGH>; /* PE2 */
 	status = "okay";
 };
 
@@ -160,35 +167,6 @@
 &ion {
 	status = "okay";
 };
-
-// &de {
-// 	status = "okay";
-// };
-
-// &fe0 {
-// 	status = "okay";
-// };
-
-// &be0 {
-// 	status = "okay";
-// };
-
-// &tve0 {
-// 	status = "okay";
-// };
-
-// &tcon0 {
-// 	pinctrl-names = "default";
-// 	pinctrl-0 = <&lcd_rgb565_pins>;
-// 	status = "okay";
-// };
-
-// &tcon0_out {
-// 	tcon0_out_lcd: endpoint@0 {
-// 		reg = <0>;
-// 		remote-endpoint = <&panel_input>;
-// 	};
-// };
 
 &codec {
 	allwinner,audio-routing =
@@ -205,25 +183,4 @@
 	pinctrl-names = "default";
 	pinctrl-0 = <&i2c0_pd_pins>;
 	status = "okay";
-
-	rtp@48 {
-		compatible = "ti,tsc2007";
-		reg = <0x48>;
-		interrupt-parent = <&pio>;
-		interrupts = <4 12 IRQ_TYPE_EDGE_FALLING>;
-		gpios = <&pio 4 12 GPIO_ACTIVE_LOW>;
-		pendown-gpio = <&pio 4 12 GPIO_ACTIVE_LOW>;
-		ti,x-plate-ohms = <660>;
-		wakeup-source;
-	};
-
-	ctp@5d {
-		compatible = "goodix,gt911";
-		reg = <0x5d>;
-		interrupt-parent = <&pio>;
-		interrupts = <4 12 IRQ_TYPE_EDGE_FALLING>; // PE12
-		irq-gpios = <&pio 4 12 GPIO_ACTIVE_HIGH>; // PE12
-		reset-gpios = <&pio 0 0 GPIO_ACTIVE_HIGH>; // PA0
-		status = "disabled";
-	};
 };
