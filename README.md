@@ -1,9 +1,8 @@
-# Buildroot Package for Allwinner SIPs
-Opensource development package for Allwinner F1C100s & F1C200s
+# Buildroot Package for 200micron Dev board
+Opensource development package preconfigured and patched to run on the Allwinner F1c200s based 200micron Dev board by me.
 
 ## Driver support
 Check this file to view current driver support progress for F1C100s/F1C200s: [PROGRESS-SUNIV.md](PROGRESS-SUNIV.md)
-
 Check this file to view current driver support progress for V3/V3s/S3/S3L: [PROGRESS-V3.md](PROGRESS-V3.md)
 
 ## Install
@@ -17,7 +16,7 @@ sudo apt install python3-distutils
 ### Download BSP
 **Notice: Root permission is not necessery for download or extract.**
 ```shell
-git clone https://github.com/mangopi-sbc/buildroot-mangopi-r
+git clone https://github.com/CoderElectronics/buildroot-200micron
 ```
 
 ## Make the first build
@@ -28,13 +27,14 @@ git clone https://github.com/mangopi-sbc/buildroot-mangopi-r
 
 **Generally, you only need to apply it once.**
 ```shell
-cd buildroot-mangopi-r
-make widora_mangopi_r3_defconfig
+cd buildroot-200micron
+make 200micron_r1_defconfig
 ```
 
 ### Regular build
+Replace N with the number of CPU threads on the compiling computer.
 ```shell
-make
+make -jN
 ```
 
 ### If changed DTS or kenrel build
@@ -47,28 +47,20 @@ make
 ./rebuild-uboot.sh
 ```
 
-## Speed up build progress
-
-### Download dl
-Buildroot will download sourcecode when compiling the firmware. You can grab a **TRUSTWORTHY** archive of 'dl' folder for speed up.
-https://pan.baidu.com/s/1-5CiMwXMQWjZxsFhsyRC5Q?pwd=1111 
-
+## Flashing firmware to 200micron Rev 1
+After building firmware, do the following with the 200micron plugged into your computer (both USB ports) and in FEL mode. (on a fresh board it is automatically in FEL mode, or hold MO test pad near flash IC to GND while plugging in)
 ```shell
-.make source
+sudo ./flashutils/linux/fel-uboot.sh
+sudo ./flashutils/linux/dfu-nand-all.sh
 ```
-
-### Compile speed
-If you have a multicore CPU, you can try
-```
-make -j8
-```
-or buy a powerful PC for yourself.
-
-## Flashing firmware to target
-You can flash a board by Linux (Recommended) or Windows system.
-### [Here is the manual.](flashutils/README.md)
 
 ## Helper Scripts
 - rebuild-uboot.sh: Recompile U-Boot when you direct edit U-Boot sourcecode.
 - rebuild-kernel.sh: Recompile Kernel when you direct edit Kernel sourcecode.
 - emulate-chroot.sh: Emulate target rootfs by chroot.
+
+## Helpful Buildroot commands
+```shell
+make menuconfig # buildroot packages
+make linux-menuconfig # linux kernal config
+```
