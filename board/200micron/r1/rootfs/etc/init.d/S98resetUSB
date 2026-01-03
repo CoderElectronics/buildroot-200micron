@@ -1,0 +1,35 @@
+#!/bin/sh
+#
+# Reset root bus hub
+#
+
+start() {
+    printf "Resetting root bus... (resetUSB)"
+    echo 1c13000.usb > /sys/bus/platform/drivers/musb-sunxi/unbind
+    echo 1c13000.usb > /sys/bus/platform/drivers/musb-sunxi/bind
+    [ $? = 0 ] && echo "OK" || echo "FAIL"
+}
+
+stop() {
+    printf "Nothing to do (resetUSB)"
+    [ $? = 0 ] && echo "OK" || echo "FAIL"
+}
+
+case "$1" in
+    start)
+    start
+    ;;
+    stop)
+    stop
+    ;;
+    restart|reload)
+    stop
+    sleep 1
+    start
+    ;;
+  *)
+    echo "Usage: $0 {start|stop|restart}"
+    exit 1
+esac
+
+exit $?
