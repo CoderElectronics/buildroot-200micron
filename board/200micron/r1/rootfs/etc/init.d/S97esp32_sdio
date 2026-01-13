@@ -1,17 +1,17 @@
 #!/bin/sh
 #
-# Reset/Re-bind USB driver
+# Enable ESP-hosted WiFi and BT
 #
 
 start() {
-    printf "(S98resetUSB) Re-binding USB driver.."
-    echo 1c13000.usb > /sys/bus/platform/drivers/musb-sunxi/unbind
-    echo 1c13000.usb > /sys/bus/platform/drivers/musb-sunxi/bind
+    printf "(S97esp32_sdio) Enabling esp32..."
+    modprobe esp32_sdio resetpin=107
     [ $? = 0 ] && echo "OK" || echo "FAIL"
 }
 
 stop() {
-    printf "(S98resetUSB) Nothing to do"
+    printf "(S97esp32_sdio) Disabling esp32..."
+    modprobe -r esp32_sdio
     [ $? = 0 ] && echo "OK" || echo "FAIL"
 }
 
