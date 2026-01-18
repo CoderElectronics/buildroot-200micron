@@ -4,13 +4,28 @@
 #
 
 start() {
-    printf "(S97esp32_sdio) Enabling esp32..."
+    printf "(S97esp32_sdio) Enabling esp32 and wpa_supplicant..."
     modprobe esp32_sdio resetpin=107
+
+    # Wait for wlan0 interface to appear (retry up to 10 times)
+    local count=0
+    while [ ! -e /sys/class/net/wlan0 ] && [ $count -lt 10 ]; do
+        sleep 1
+        count=$((count + 1))
+    done
+
+    if [ ! -e /sys/class/net/wlan0 ]; then
+        echo "FAIL (wlan0 interface not found)"
+        return 1
+    fi
+
+    wpa_supplicant -B -D nl80211 -i wlan0 -c /etc/wpa_supplicant.conf
     [ $? = 0 ] && echo "OK" || echo "FAIL"
 }
 
 stop() {
-    printf "(S97esp32_sdio) Disabling esp32..."
+    printf "(S97esp32_sdio) Disabling esp32 and wpa_supplicant..."
+    killall wpa_supplicant || true
     modprobe -r esp32_sdio
     [ $? = 0 ] && echo "OK" || echo "FAIL"
 }
