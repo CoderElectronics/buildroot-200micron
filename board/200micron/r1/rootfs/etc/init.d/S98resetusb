@@ -4,14 +4,14 @@
 #
 
 start() {
-    printf "(S98resetUSB) Re-binding USB driver.."
+    printf "(S98resetusb) Re-binding USB driver... "
     echo 1c13000.usb > /sys/bus/platform/drivers/musb-sunxi/unbind
     echo 1c13000.usb > /sys/bus/platform/drivers/musb-sunxi/bind
     [ $? = 0 ] && echo "OK" || echo "FAIL"
 }
 
 stop() {
-    printf "(S98resetUSB) Nothing to do"
+    printf "(S98resetusb) Nothing to do. "
     [ $? = 0 ] && echo "OK" || echo "FAIL"
 }
 

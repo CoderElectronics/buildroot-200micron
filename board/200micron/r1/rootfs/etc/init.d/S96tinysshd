@@ -1,0 +1,50 @@
+#!/bin/sh
+#
+# TinySSHD server initialization
+#
+
+PIDFILE="/var/run/tinysshd.pid"
+
+start() {
+    printf "(S96tinysshd) Starting tinysshd... "
+
+    mkdir -p /etc/tinyssh
+    tinysshd-makekey -q /etc/tinyssh/sshkeydir
+
+    busybox tcpsvd 0 22 tinysshd -v /etc/tinyssh/sshkeydir &
+    echo $! > $PIDFILE
+
+    [ $? = 0 ] && echo "OK" || echo "FAIL"
+}
+
+stop() {
+    printf "(S96tinysshd) Stopping tinysshd... "
+
+    if [ -f $PIDFILE ]; then
+        kill $(cat $PIDFILE) 2>/dev/null
+        rm -f $PIDFILE
+    fi
+
+    killall tinysshd 2>/dev/null
+
+    echo "OK"
+}
+
+case "$1" in
+    start)
+    start
+    ;;
+    stop)
+    stop
+    ;;
+    restart|reload)
+    stop
+    sleep 1
+    start
+    ;;
+  *)
+    echo "Usage: $0 {start|stop|restart}"
+    exit 1
+esac
+
+exit $?

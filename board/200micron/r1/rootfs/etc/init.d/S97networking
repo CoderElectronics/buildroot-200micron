@@ -4,7 +4,7 @@
 #
 
 start() {
-    printf "(S97esp32_sdio) Enabling esp32 and wpa_supplicant..."
+    printf "(S97networking) Enabling esp32 and wpa_supplicant... "
     modprobe esp32_sdio resetpin=107
 
     # Wait for wlan0 interface to appear (retry up to 10 times)
@@ -24,7 +24,7 @@ start() {
 }
 
 stop() {
-    printf "(S97esp32_sdio) Disabling esp32 and wpa_supplicant..."
+    printf "(S97networking) Disabling esp32 and wpa_supplicant... "
     killall wpa_supplicant || true
     modprobe -r esp32_sdio
     [ $? = 0 ] && echo "OK" || echo "FAIL"
