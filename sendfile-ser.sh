@@ -10,6 +10,9 @@ if [ $# -lt 1 ]; then
 fi
 
 stty -F $SERIAL_PORT speed $BAUD_RATE cs8 -cstopb -parenb raw
+
+echo -ne "root\n\r" > $SERIAL_PORT
+sleep 1
 echo -ne "rz\n\r" > $SERIAL_PORT
 
 sz --zmodem $1 >$SERIAL_PORT < $SERIAL_PORT
