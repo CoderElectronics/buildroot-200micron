@@ -24,9 +24,9 @@ define ESP_HOSTED_LINUX_CONFIG_FIXUPS
 endef
 
 ifeq ($(BR2_PACKAGE_ESP_HOSTED_SPI),y)
-ESP_HOSTED_MODULE_MAKE_OPTS = target=spi
+ESP_HOSTED_MODULE_MAKE_OPTS = target=spi CONFIG_AP_SUPPORT=y
 else
-ESP_HOSTED_MODULE_MAKE_OPTS = target=sdio
+ESP_HOSTED_MODULE_MAKE_OPTS = target=sdio CONFIG_AP_SUPPORT=y
 endif
 
 $(eval $(kernel-module))

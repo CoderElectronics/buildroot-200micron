@@ -1,0 +1,2 @@
+#!/bin/sh
+date -u -s "$(wget -qSO- http://example.com 2>&1 | grep '^  Date:' | sed 's/^  Date: //' | awk '{printf "%04d-%02d-%02d %s\n", $4, (index("JanFebMarAprMayJunJulAugSepOctNovDec",$3)+2)/3, $2, $5}')"

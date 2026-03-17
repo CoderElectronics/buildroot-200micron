@@ -12,7 +12,7 @@
 		serial0 = &uart0;
 		serial1 = &uart2;
 		spi0 = &spi0;
-		i2c0 = &i2c0;
+		i2c1 = &i2c1;
 	};
 
 	chosen {
@@ -174,8 +174,8 @@
 	status = "okay";
 };
 
-&i2c0 {
+&i2c1 {
 	pinctrl-names = "default";
-	pinctrl-0 = <&i2c0_pd_pins>;
+	pinctrl-0 = <&i2c1_pd_pins>;
 	status = "okay";
 };

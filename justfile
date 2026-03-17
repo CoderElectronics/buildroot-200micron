@@ -2,12 +2,15 @@ build-uboot:
 	./rebuild-uboot.sh
 	make -j12
 
-build-linux:
-	./rebuild-linux.sh
+build-kernel:
+	./rebuild-kernel.sh
 	make -j12
 
 build:
 	make -j12
+
+sdk:
+	make sdk
 
 flash:
 	sudo ./flashutils/linux/fel-uboot.sh
