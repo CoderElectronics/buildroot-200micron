@@ -1,2 +1,9 @@
 #!/bin/sh
-date -u -s "$(wget -qSO- http://example.com 2>&1 | grep '^  Date:' | sed 's/^  Date: //' | awk '{printf "%04d-%02d-%02d %s\n", $4, (index("JanFebMarAprMayJunJulAugSepOctNovDec",$3)+2)/3, $2, $5}')"
+# Update system time via HTTP header to avoid having to include NTP
+
+if wget -q --spider http://example.com; then
+    echo "Internet is up, fetching time..."
+    date -u -s "$(wget -qSO- http://example.com 2>&1 | grep '^  Date:' | sed 's/^  Date: //' | awk '{printf "%04d-%02d-%02d %s\n", $4, (index("JanFebMarAprMayJunJulAugSepOctNovDec",$3)+2)/3, $2, $5}')"
+else
+    echo "No internet! cannot update time."
+fi

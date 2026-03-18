@@ -5,6 +5,7 @@
 
 start() {
     printf "(S97networking) Enabling esp32 and wpa_supplicant... "
+    
     modprobe esp32_sdio resetpin=107
 
     # Wait for wlan0 interface to appear (retry up to 10 times)
@@ -20,13 +21,29 @@ start() {
     fi
 
     wpa_supplicant -B -D nl80211 -i wlan0 -c /etc/wpa_supplicant.conf
+    
+    [ $? = 0 ] && echo "OK" || echo "FAIL"
+}
+
+ap() {
+    printf "(S97networking) Enabling AP mode... (restart service to disable)"
+
+    killall wpa_supplicant || true
+    hostapd /etc/hostapd.conf -B
+    ifconfig wlan0 192.168.1.1 up
+    udhcpd /etc/udhcpd.conf
+    
     [ $? = 0 ] && echo "OK" || echo "FAIL"
 }
 
 stop() {
     printf "(S97networking) Disabling esp32 and wpa_supplicant... "
+    
     killall wpa_supplicant || true
+    killall hostapd || true
+    killall udhcpd || true
     modprobe -r esp32_sdio
+    
     [ $? = 0 ] && echo "OK" || echo "FAIL"
 }
 
@@ -42,8 +59,11 @@ case "$1" in
     sleep 1
     start
     ;;
+    ap)
+    ap
+    ;;
   *)
-    echo "Usage: $0 {start|stop|restart}"
+    echo "Usage: $0 {start|stop|restart|ap}"
     exit 1
 esac
 
