@@ -5,9 +5,10 @@ Opensource development package preconfigured and patched to run on the Allwinner
 Check this file to view current driver support progress for F1C100s/F1C200s: [PROGRESS-SUNIV.md](PROGRESS-SUNIV.md)
 
 To-do:
-- [ ] add packages Bluetooth LE (hci already exposed)
+- [ ] add packages for Bluetooth LE (hci already exposed)
 - [ ] figure out current CPU clock and how to overclock to 900mhz-1ghz
 - [ ] consider updating kernel version
+- [ ] shift partitioning so overlay is larger
 
 ## Install
 
