@@ -1,5 +1,5 @@
 # Buildroot Package for 200micron Dev board
-Opensource development package preconfigured and patched to run on the Allwinner F1c200s based 200micron Dev board by me.
+Open-source Buildroot development package preconfigured and patched to run on my homemade Allwinner F1c200s based 200micron dev board.
 
 ## Driver support & To-do
 Check this file to view current driver support progress for F1C100s/F1C200s: [PROGRESS-SUNIV.md](PROGRESS-SUNIV.md)
